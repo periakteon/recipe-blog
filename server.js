@@ -11,13 +11,6 @@ app.use(express.urlencoded({ extended: true }));
 // bir middleware daha.
 app.use(expressLayouts);
 
-const middleware = (req, res, next) => {
-  console.log("middleware devrede");
-  next();
-}
-
-app.use(middleware);
-
 // public klasörünü static yapıyoruz. içerisinde resimler, scriptler, css'ler vb. tutabiliriz
 app.use(express.static("public"));
 
