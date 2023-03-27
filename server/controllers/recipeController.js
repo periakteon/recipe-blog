@@ -147,9 +147,14 @@ exports.exploreLatest = async (req, res) => {
  */
 exports.exploreRandomRecipe = async (req, res) => {
   try {
-    const limitNumber = 20;
-    const recipe = await Recipe.find({}).sort({_id: -1}).limit(limitNumber);
-    res.render("explore-random", {title: `Explore Latest`, recipe});
+    // rastgele yazı göstermek için tüm recipe'lerin sayısını, yani ne kadar olduğunu sayıyoruz (countDocuments)
+    const count = await Recipe.find().countDocuments();
+    // rastgele yazı göstermek için sayı oluşturuyoruz
+    const random = Math.floor(Math.random() * count);
+    // findOne() metodu, veritabanından yalnızca bir tarif döndürür. skip() metoduna rasgele bir sayı geçirildiği için, bu metot seçilen rasgele dizindeki tarifi döndürür ve diğer tarifleri atlar. Yani, skip() metodu burada, veritabanından seçilen rasgele tarifin öncesindeki tüm tarifleri atlar ve sadece seçilen tarifi döndürür.
+    const recipe = await Recipe.findOne().skip(random);
+    res.render("explore-random", {title: `Explore Random`, recipe});
+    // res.render("explore-random", {title: `Show Random`, recipe});
   } catch (error) {
     res.status(500).send({ message: error.message && "Error Occured" });
   }
