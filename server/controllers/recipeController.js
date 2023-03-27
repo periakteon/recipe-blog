@@ -19,15 +19,18 @@ exports.homepage = async (req, res) => {
     // "-1" yazarak aslında descending order yapmış oluyoruz, yani tersten sıralıyoruz
     const latest = await Recipe.find({}).sort({ _id: -1 }).limit(limitNumber);
     // Anasayfadaki "Thai Recipes" kısmı için
-    const thai = await Recipe.find({"category": "Thai"}).limit(limitNumber);
+    const thai = await Recipe.find({ category: "Thai" }).limit(limitNumber);
     // Anasayfadaki "American Recipes" kısmı için
-    const american = await Recipe.find({"category": "American"}).limit(limitNumber);
+    const american = await Recipe.find({ category: "American" }).limit(
+      limitNumber
+    );
     // Anasayfadaki "Mexican Recipes" kısmı için
-    const chinese = await Recipe.find({"category": "Chinese"}).limit(limitNumber);
+    const chinese = await Recipe.find({ category: "Chinese" }).limit(
+      limitNumber
+    );
 
     //"index.ejs"te dot notation ile erişebilmek için "latest", "thai", "american" ve "chinese" değişkenlerini bir nesne olarak "food"da saklıyoruz
     const food = { latest, thai, american, chinese };
-
 
     // views'teki "index.ejs" dosyasını göstermesini istiyoruz
     // server.js'te "layout"ı "./layouts/main" olarak belirlemiştik; dolayısıyla, main.ejs'te kullanılmak ve index'te gösterilmek üzere bir "title" nesnesi gönderiyoruz.
@@ -68,11 +71,40 @@ exports.exploreRecipe = async (req, res) => {
     const recipeId = req.params.id;
     const recipe = await Recipe.findById(recipeId);
     // recipe.ejs'te kullanmak üzere "recipe" değişkenini gönderiyoruz
-    res.render("recipe", { title: `Recipe Blog - Recipies: ${recipe.name}`, recipe});
+    res.render("recipe", {
+      title: `Recipe Blog - Recipies: ${recipe.name}`,
+      recipe,
+    });
   } catch (error) {
     res.status(500).send({ message: error || "Homepage'de hata oluştu" });
   }
   console.log(" '/recipe' adresine GET isteği geldi");
+};
+
+/**
+ * GET /categories/:id
+ * Categories By Id
+ */
+exports.exploreCategoriesById = async (req, res) => {
+  try {
+    let categoryId = req.params.id;
+    const categoryById = await Recipe.find({ category: categoryId });
+
+    if (!categoryById || categoryById.length === 0) {
+      // Kategori bulunamadıysa başlığı değiştir
+      res.render("categories", {
+        title: "HATA: Böyle bir kategori bulunamadı.",
+      });
+      return; // Fonksiyondan çık
+    }
+
+    res.render("categories", {
+      title: `Recipe Blog - Category: ${categoryId}`,
+      categoryById,
+    });
+  } catch (error) {
+    res.satus(500).send({ message: error.message || "Error Occured" });
+  }
 };
 
 // async function dummyRecipe() {
