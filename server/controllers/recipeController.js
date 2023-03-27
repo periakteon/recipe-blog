@@ -1,5 +1,6 @@
 require("../models/database");
 const Category = require("../models/Category");
+const Recipe = require("../models/Recipe");
 
 /**
  *
@@ -45,3 +46,57 @@ exports.exploreCategories = async (req, res) => {
   }
   console.log(" '/categories' adresine GET isteği geldi");
 };
+
+// DUMMY RECIPE EKLEMEK İÇİN
+// async function dummyRecipe() {
+//   try {
+//     await Recipe.insertMany([
+//     {
+//       "name": "Pilav üstü kuru",
+//       "description": "Klasik türk yemeği",
+//       "email": "masumgokyuz@gmail.com",
+//       "ingredients": [
+//         "pilav",
+//         "tuz",
+//         "soda",
+//         "ekmek",
+//         "fasulye"
+//       ],
+//       "category": "Thai",
+//       "image": "stir-fried-vegetables.jpg",
+//     },
+//     {
+//       "name": "Pilav üstü qwefqwefqw",
+//       "description": "Klasik türk 124",
+//       "email": "masumgokyuz@gmail.com",
+//       "ingredients": [
+//         "pqefwqilav",
+//         "tuz",
+//         "soda",
+//         "ekmek",
+//         "fasulye"
+//       ],
+//       "category": "American",
+//       "image": "stir-fried-vegetables.jpg",
+//     },
+//     {
+//       "name": "Pilav üstü33333 qwefqwefqw",
+//       "description": "Klasik t3ürk 124",
+//       "email": "masumgokyuz@gmail.com",
+//       "ingredients": [
+//         "pqefwqilav",
+//         "tuz",
+//         "soda333",
+//         "ekmek",
+//         "fasulye"
+//       ],
+//       "category": "Mexican",
+//       "image": "stir-fried-vegetables.jpg",
+//     }
+//     ])
+//   } catch (error) {
+//     console.error({ message: error || "Tarif eklenirken hata oluştu" });
+//   }
+// }
+//
+// dummyRecipe();

@@ -21,3 +21,7 @@ db.once("open", function () {
   console.log("Veritabanı bağlantısı başarılı!");
 });
 
+
+// Modelleri veritabanına aktarıyoruz (bunları eklemediğimde de çalışıyordu, sanırım mongoose güncellenmiş ve artık ekstra model belirtmeye gerek kalmamış olabilir)
+require("./Category");
+require("./Recipe");
