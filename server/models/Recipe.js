@@ -28,4 +28,7 @@ const recipeSchema = new mongoose.Schema({
   },
 });
 
+// search için indexing (buna gerek olduğundan emin olamadığım için yorum satırına aldım)
+// recipeSchema.index({ name: "text", description: "text" });
+
 module.exports = mongoose.model("Recipe", recipeSchema);

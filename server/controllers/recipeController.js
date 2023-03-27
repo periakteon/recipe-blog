@@ -107,55 +107,23 @@ exports.exploreCategoriesById = async (req, res) => {
   }
 };
 
-// async function dummyRecipe() {
-//   try {
-//     await Recipe.insertMany([
-//     {
-//       "name": "Çince",
-//       "description": "Klasik türk yemeği",
-//       "email": "masumgokyuz@gmail.com",
-//       "ingredients": [
-//         "pilav",
-//         "tuz",
-//         "soda",
-//         "ekmek",
-//         "fasulye"
-//       ],
-//       "category": "Chinese",
-//       "image": "stir-fried-vegetables.jpg",
-//     },
-//     {
-//       "name": "Pamerikan",
-//       "description": "Klasik türk 124",
-//       "email": "masumgokyuz@gmail.com",
-//       "ingredients": [
-//         "pqefwqilav",
-//         "tuz",
-//         "soda",
-//         "ekmek",
-//         "fasulye"
-//       ],
-//       "category": "American",
-//       "image": "stir-fried-vegetables.jpg",
-//     },
-//     {
-//       "name": "Thaii",
-//       "description": "Klasik t3ürk 124",
-//       "email": "masumgokyuz@gmail.com",
-//       "ingredients": [
-//         "pqefwqilav",
-//         "tuz",
-//         "soda333",
-//         "ekmek",
-//         "fasulye"
-//       ],
-//       "category": "Thai",
-//       "image": "stir-fried-vegetables.jpg",
-//     }
-//     ])
-//   } catch (error) {
-//     console.error({ message: error || "Tarif eklenirken hata oluştu" });
-//   }
-// }
-
-// dummyRecipe();
+/**
+ *
+ * POST /search
+ * Search
+ *
+ */
+exports.searchRecipe = async (req, res) => {
+  try {
+    // "main.ejs"te form dosyasındaki arama inputunun name'ini yazıyoruz. Yani şunu dikkate alıyoruz: <input type="search" name="q" class="form-control" placeholder="Search..." aria-label="Search">
+    const searchTerm = req.query.q;
+    console.log(searchTerm);
+    const recipe = await Recipe.find({
+      // $text, $search ve $diacriticSensitive anahtar kelimeleri, Mongoose'un Tam Metin Arama özelliğini kullanırken MongoDB sorgularında kullanılan özel anahtar kelimelerdir.
+      $text: { $search: searchTerm, $diacriticSensitive: true },
+    });
+    res.render("search", {title: "Search", recipe, searchTerm});
+  } catch (error) {
+    res.status(500).send({ message: error.message && "Error Occured" });
+  }
+};

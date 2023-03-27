@@ -14,10 +14,12 @@ app.use(expressLayouts);
 // public klasörünü static yapıyoruz. içerisinde resimler, scriptler, css'ler vb. tutabiliriz
 app.use(express.static("public"));
 
-// "layout"u "layouts/main" klasörü olarak belirliyoruz
-app.set("layout", "./layouts/main");
 
 app.set("view engine", "ejs");
+
+app.set('views', 'views'); // set custom root for view engine
+// "layout"u "layouts/main" klasörü olarak belirliyoruz
+app.set("layout", "./layouts/main");
 
 // "/" adresine gelen istekleri recipeRouter ile yönetmek istiyoruz yani recipeRouter'ı middleware olarak kullanıyoruz
 app.use("/", recipeRouter);
