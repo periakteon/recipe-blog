@@ -117,13 +117,40 @@ exports.searchRecipe = async (req, res) => {
   try {
     // "main.ejs"te form dosyasındaki arama inputunun name'ini yazıyoruz. Yani şunu dikkate alıyoruz: <input type="search" name="q" class="form-control" placeholder="Search..." aria-label="Search">
     const searchTerm = req.query.q;
-    console.log(searchTerm);
     const recipe = await Recipe.find({
       // $text, $search ve $diacriticSensitive anahtar kelimeleri, Mongoose'un Tam Metin Arama özelliğini kullanırken MongoDB sorgularında kullanılan özel anahtar kelimelerdir.
       $text: { $search: searchTerm, $diacriticSensitive: true },
     });
-    res.render("search", {title: "Search", recipe, searchTerm});
+    res.render("search", {title: `Search - ${searchTerm}`, recipe});
   } catch (error) {
     res.status(500).send({ message: error.message && "Error Occured" });
   }
 };
+
+/**
+ * GET /explore-latest
+ * Explore Latest
+ */
+exports.exploreLatest = async (req, res) => {
+  try {
+    const limitNumber = 20;
+    const recipe = await Recipe.find({}).sort({_id: -1}).limit(limitNumber);
+    res.render("explore-latest", {title: `Explore Latest`, recipe});
+  } catch (error) {
+    res.status(500).send({ message: error.message && "Error Occured" });
+  }
+}
+
+/**
+ * GET /explore-random
+ * Show Random
+ */
+exports.exploreRandomRecipe = async (req, res) => {
+  try {
+    const limitNumber = 20;
+    const recipe = await Recipe.find({}).sort({_id: -1}).limit(limitNumber);
+    res.render("explore-random", {title: `Explore Latest`, recipe});
+  } catch (error) {
+    res.status(500).send({ message: error.message && "Error Occured" });
+  }
+}
