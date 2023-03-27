@@ -54,7 +54,7 @@
   <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
     <% if(food != '') { %>
       <% food.latest.forEach((recipe, index) => { %>
-        <a href="/categories/<%- recipe._id %>" class="col text-center category__link">
+        <a href="/recipe/<%- recipe._id %>" class="col text-center category__link">
           <div class="category__img shadow">
             <img src="/uploads/<%- recipe.image %>" alt="<%- recipe.name %>" loading="lazy">
           </div>
@@ -79,7 +79,7 @@
   <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
     <% if(typeof food.thai !== "undefined" && food.thai.length > 0) { %>
       <% food.thai.forEach((recipe, index) => { %>
-        <a href="/categories/<%- recipe._id %>" class="col text-center category__link">
+        <a href="/recipe/<%- recipe._id %>" class="col text-center category__link">
           <div class="category__img shadow">
             <img src="/uploads/<%- recipe.image %>" alt="<%- recipe.name %>" loading="lazy">
           </div>
@@ -103,7 +103,7 @@
   <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
     <% if(typeof food.american !== "undefined" && food.american.length > 0) { %>
       <% food.american.forEach((recipe, index) => { %>
-        <a href="/categories/<%- recipe._id %>" class="col text-center category__link">
+        <a href="/recipe/<%- recipe._id %>" class="col text-center category__link">
           <div class="category__img shadow">
             <img src="/uploads/<%- recipe.image %>" alt="<%- recipe.name %>" loading="lazy">
           </div>
@@ -127,7 +127,7 @@
   <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
     <% if(typeof food.chinese !== "undefined" && food.chinese.length > 0) { %>
       <% food.chinese.forEach((recipe, index) => { %>
-        <a href="/categories/<%- recipe._id %>" class="col text-center category__link">
+        <a href="/recipe/<%- recipe._id %>" class="col text-center category__link">
           <div class="category__img shadow">
             <img src="/uploads/<%- recipe.image %>" alt="<%- recipe.name %>" loading="lazy">
           </div>

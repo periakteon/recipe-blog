@@ -57,6 +57,24 @@ exports.exploreCategories = async (req, res) => {
   console.log(" '/categories' adresine GET isteği geldi");
 };
 
+/**
+ *
+ * GET /recipe/:id
+ * Recipies
+ *
+ */
+exports.exploreRecipe = async (req, res) => {
+  try {
+    const recipeId = req.params.id;
+    const recipe = await Recipe.findById(recipeId);
+    // recipe.ejs'te kullanmak üzere "recipe" değişkenini gönderiyoruz
+    res.render("recipe", { title: `Recipe Blog - Recipies: ${recipe.name}`, recipe});
+  } catch (error) {
+    res.status(500).send({ message: error || "Homepage'de hata oluştu" });
+  }
+  console.log(" '/recipe' adresine GET isteği geldi");
+};
+
 // async function dummyRecipe() {
 //   try {
 //     await Recipe.insertMany([
