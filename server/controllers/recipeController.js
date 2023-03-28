@@ -169,7 +169,11 @@ exports.exploreRandomRecipe = async (req, res) => {
 exports.submitRecipe = async (req, res) => {
   const infoErrorsObj = req.flash("infoErrors");
   const infoSubmitObj = req.flash("infoSubmit");
-  res.render("submit-recipe", {title: `Submit Recipe`, infoErrorsObj, infoSubmitObj});
+  res.render("submit-recipe", {
+    title: `Submit Recipe`,
+    infoErrorsObj,
+    infoSubmitObj,
+  });
 };
 
 /**
@@ -179,18 +183,36 @@ exports.submitRecipe = async (req, res) => {
 
 exports.submitRecipeOnPost = async (req, res) => {
   try {
+    let imageUploadFile;
+    let uploadPath;
+    let newImageName;
+    
+    // eğer dosya mevcut değilse veya yüklenen dosya stringi 0'sa, yani nesne yoksa (In this line, Object.keys() is used to get an array of all the property names [yani, key'leri] of the req.files object. Object.keys() is a built-in JavaScript method that returns an array of a given object's own enumerable property names. In this case, the req.files object is being passed as an argument to Object.keys(), which will return an array of property names of the object. The length property is then used to check if the array is empty, which means no files were uploaded. If req.files is empty or there are no files uploaded, the code will log "No files uploaded" to the console. Otherwise, the code will continue with the file upload process.)
+    if (!req.files || Object.keys(req.files).length === 0) {
+      console.log("No files uploaded");
+    } else {
+      imageUploadFile = req.files.image;
+      newImageName = new Date().toLocaleString().replace(/[/:\s]/g, '-') + '-' + imageUploadFile.name;
 
+      // absolute path'i "./" olarak belirlioyoruz. "/public/uploads/" ise relative path oluyor
+      uploadPath = require("path").resolve("./") + "/public/uploads/" + newImageName;
+
+      // the mv method is called on the imageUploadFile object to move the uploaded file to the specified uploadPath. The uploadPath variable contains the full path where the uploaded file will be saved, as we discussed earlier. The mv method takes two arguments: the first argument is the destination path where the uploaded file should be moved to, and the second argument is a callback function that will be called when the move operation is completed. If there is an error during the move operation, the callback function will receive an error object, and the code will return a 500 status code with the error message as the response. So, in summary, the mv method is used to move the uploaded file to the desired location on the server, and the callback function is used to handle any errors that may occur during the move operation.
+      imageUploadFile.mv(uploadPath, function (err) {
+        if (err) res.status(500).send(err);
+      });
+    }
     const newRecipe = new Recipe({
       name: req.body.name,
       description: req.body.description,
       email: req.body.email,
       ingredients: req.body.ingredients,
       category: req.body.category,
-      image: "chocolate-banoffe-whoopie-pies.jpg",
+      image: newImageName,
     });
 
     await newRecipe.save();
-
+    // to add a new flash message to the infoSubmit category. The first argument, "infoSubmit", is the name of the category where the flash message will be stored. The second argument, "Recipe has been added.", is the actual message that will be displayed to the user. After calling req.flash, the flash message will be stored in the session, and it can be retrieved on subsequent requests using the req.flash method with the same category name.
     req.flash("infoSubmit", "Recipe has been added.");
     res.redirect("/submit-recipe");
   } catch (error) {
