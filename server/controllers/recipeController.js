@@ -121,7 +121,7 @@ exports.searchRecipe = async (req, res) => {
       // $text, $search ve $diacriticSensitive anahtar kelimeleri, Mongoose'un Tam Metin Arama özelliğini kullanırken MongoDB sorgularında kullanılan özel anahtar kelimelerdir.
       $text: { $search: searchTerm, $diacriticSensitive: true },
     });
-    res.render("search", {title: `Search - ${searchTerm}`, recipe});
+    res.render("search", { title: `Search - ${searchTerm}`, recipe });
   } catch (error) {
     res.status(500).send({ message: error.message && "Error Occured" });
   }
@@ -134,17 +134,18 @@ exports.searchRecipe = async (req, res) => {
 exports.exploreLatest = async (req, res) => {
   try {
     const limitNumber = 20;
-    const recipe = await Recipe.find({}).sort({_id: -1}).limit(limitNumber);
-    res.render("explore-latest", {title: `Explore Latest`, recipe});
+    const recipe = await Recipe.find({}).sort({ _id: -1 }).limit(limitNumber);
+    res.render("explore-latest", { title: `Explore Latest`, recipe });
   } catch (error) {
     res.status(500).send({ message: error.message && "Error Occured" });
   }
-}
+};
 
 /**
  * GET /explore-random
  * Show Random
  */
+
 exports.exploreRandomRecipe = async (req, res) => {
   try {
     // rastgele yazı göstermek için tüm recipe'lerin sayısını, yani ne kadar olduğunu sayıyoruz (countDocuments)
@@ -153,9 +154,47 @@ exports.exploreRandomRecipe = async (req, res) => {
     const random = Math.floor(Math.random() * count);
     // findOne() metodu, veritabanından yalnızca bir tarif döndürür. skip() metoduna rasgele bir sayı geçirildiği için, bu metot seçilen rasgele dizindeki tarifi döndürür ve diğer tarifleri atlar. Yani, skip() metodu burada, veritabanından seçilen rasgele tarifin öncesindeki tüm tarifleri atlar ve sadece seçilen tarifi döndürür.
     const recipe = await Recipe.findOne().skip(random);
-    res.render("explore-random", {title: `Explore Random`, recipe});
+    res.render("explore-random", { title: `Explore Random`, recipe });
     // res.render("explore-random", {title: `Show Random`, recipe});
   } catch (error) {
     res.status(500).send({ message: error.message && "Error Occured" });
   }
-}
+};
+
+/**
+ * GET /submit-recipe
+ * Submit Recipe
+ */
+
+exports.submitRecipe = async (req, res) => {
+  const infoErrorsObj = req.flash("infoErrors");
+  const infoSubmitObj = req.flash("infoSubmit");
+  res.render("submit-recipe", {title: `Submit Recipe`, infoErrorsObj, infoSubmitObj});
+};
+
+/**
+ * POST /submit-recipe
+ * Submit Recipe
+ */
+
+exports.submitRecipeOnPost = async (req, res) => {
+  try {
+
+    const newRecipe = new Recipe({
+      name: req.body.name,
+      description: req.body.description,
+      email: req.body.email,
+      ingredients: req.body.ingredients,
+      category: req.body.category,
+      image: "chocolate-banoffe-whoopie-pies.jpg",
+    });
+
+    await newRecipe.save();
+
+    req.flash("infoSubmit", "Recipe has been added.");
+    res.redirect("/submit-recipe");
+  } catch (error) {
+    req.flash("infoErrors", error);
+    res.redirect("/submit-recipe");
+  }
+};

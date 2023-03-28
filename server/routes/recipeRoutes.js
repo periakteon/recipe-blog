@@ -22,4 +22,8 @@ router.get("/explore-latest", recipeController.exploreLatest);
 
 router.get("/explore-random", recipeController.exploreRandomRecipe);
 
+router.get("/submit-recipe", recipeController.submitRecipe);
+
+router.post("/submit-recipe", recipeController.submitRecipeOnPost);
+
 module.exports = router;
